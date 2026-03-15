@@ -30,7 +30,9 @@ app.use('/api/settlements', settlementRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
-
+app.get("/", (req, res) => {
+  res.send("SmartSplit Backend is Running 🚀");
+});
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Internal Server Error', error: err.message });

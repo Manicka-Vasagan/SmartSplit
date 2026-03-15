@@ -64,6 +64,10 @@ export const createSettlement = async (req, res) => {
       { path: 'payee', select: 'name email avatar' },
     ]);
 
+    // 🔴 Real-time: broadcast settlement to all group members
+    const io = req.app.get('io');
+    if (io) io.to(`group:${groupId}`).emit('settlement:new', populated);
+
     res.status(201).json(populated);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create settlement', error: error.message });

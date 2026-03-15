@@ -76,6 +76,10 @@ export const createExpense = async (req, res) => {
       { path: 'splits.user', select: 'name email avatar' },
     ]);
 
+    // 🔴 Real-time: broadcast new expense to all group members
+    const io = req.app.get('io');
+    if (io) io.to(`group:${groupId}`).emit('expense:new', populated);
+
     res.status(201).json(populated);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create expense', error: error.message });
@@ -120,6 +124,10 @@ export const updateExpense = async (req, res) => {
       { path: 'splits.user', select: 'name email avatar' },
     ]);
 
+    // 🔴 Real-time: broadcast updated expense to all group members
+    const io = req.app.get('io');
+    if (io) io.to(`group:${expense.group.toString()}`).emit('expense:updated', populated);
+
     res.json(populated);
   } catch (error) {
     res.status(500).json({ message: 'Failed to update expense', error: error.message });
@@ -139,7 +147,13 @@ export const deleteExpense = async (req, res) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
+    const groupId = expense.group.toString();
     await expense.deleteOne();
+
+    // 🔴 Real-time: broadcast deletion to all group members
+    const io = req.app.get('io');
+    if (io) io.to(`group:${groupId}`).emit('expense:deleted', { expenseId: req.params.id, groupId });
+
     res.json({ message: 'Expense deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete expense', error: error.message });
@@ -198,3 +212,4 @@ export const getBalances = async (req, res) => {
     res.status(500).json({ message: 'Failed to calculate balances', error: error.message });
   }
 };
+

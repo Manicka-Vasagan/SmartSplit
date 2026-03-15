@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import GroupDetail from './pages/GroupDetail';
+import JoinGroup from './pages/JoinGroup';
 import Profile from './pages/Profile';
 
 const AppContent = () => {
@@ -35,6 +36,7 @@ const AppContent = () => {
                     <Routes>
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/groups/:id" element={<GroupDetail />} />
+                      <Route path="/join/:inviteCode" element={<JoinGroup />} />
                       <Route path="/profile" element={<Profile />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>

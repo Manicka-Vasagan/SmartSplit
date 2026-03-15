@@ -22,6 +22,7 @@ const app = express();
 const CORS_ORIGINS = [
   'http://localhost:5173',
   'https://smart-split-iota.vercel.app',
+  'https://smartsplit-api.onrender.com',
 ];
 
 app.use(cors({ origin: CORS_ORIGINS, credentials: true }));
